@@ -5,7 +5,7 @@ export interface Store {
 }
 
 export type State = any;
-export type Reducer = (state: State, action: Action) => any;
+export type Reducer = (state: State, action: Action) => State;
 export type Listener = (state: State) => void;
 
 export interface Action {
