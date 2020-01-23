@@ -28,8 +28,8 @@ describe('Store', () => {
 
     describe('Features', () => {
         let store: Store;
-        const rootReducer = (state: State = 0, action: Action) => {
-            switch(action.type) {
+        const rootReducer = (state: number = 0, action: Action) => {
+            switch (action.type) {
                 case 'increment': {
                     return state + action.payload;
                 }
@@ -47,13 +47,45 @@ describe('Store', () => {
             expect(store.getState()).toEqual(undefined);
         });
 
-        it('should dispatch an action', () => {
+        it('should dispatch an action change state', () => {
             store.dispatch({
                 type: 'increment',
                 payload: 1
             });
 
             expect(store.getState()).toEqual(1)
+        });
+
+        it('should subscribe to store changes', (done) => {
+            store.subscribe((counter: number) => {
+                expect(counter).toEqual(1);
+                done();
+            });
+
+            store.dispatch({
+                type: 'increment',
+                payload: 1
+            });
+        });
+
+        it('should subscribe to multiple store changes', () => {
+            const mockFn = jest.fn();
+            store.subscribe(mockFn);
+
+            store.dispatch({
+                type: 'increment',
+                payload: 1
+            });
+
+            store.dispatch({
+                type: 'increment',
+                payload: 3
+            });
+
+            expect(mockFn).toHaveBeenCalledTimes(2);
+
+            expect(mockFn.mock.calls[0][0]).toEqual(1);
+            expect(mockFn.mock.calls[1][0]).toEqual(4);
         });
     });
 });

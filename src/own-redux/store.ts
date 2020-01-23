@@ -1,29 +1,31 @@
-export interface Action {
-    type: string;
-    payload: any;
-}
-
-export type State = any;
-
 export interface Store {
     getState: () => State;
     dispatch: (action: Action) => void;
-    subscribe: () => void;
+    subscribe: (fn: Listener) => void;
 }
 
+export type State = any;
 export type Reducer = (state: State, action: Action) => any;
+export type Listener = (state: State) => void;
+
+export interface Action {
+    type: string;
+    payload?: any;
+}
 
 const createStore = (rootReducer: Reducer): Store => {
-    let state: any;
+    let state: State;
+    const listeners: Listener[] = [];
 
     const getState = () => state; 
 
     const dispatch = (action: Action) => {
-        state = rootReducer(state, action)
+        state = rootReducer(state, action);
+        listeners.forEach(l => l(state));
     }
 
-    const subscribe = () => {
-
+    const subscribe = (subscriber: Listener) => {
+        listeners.push(subscriber);
     }
 
     return { getState, dispatch, subscribe }
