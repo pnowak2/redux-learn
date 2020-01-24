@@ -1,9 +1,11 @@
-import { Reducer } from './store';
+import { Action, Reducer, State } from './store';
 
 export interface Reducers {
     [key: string]: Reducer
 }
 
 export const combineReducers = (reducers: Reducers): Reducer => {
-    return null;
+    return (state: State, action: Action): State => {
+        return state;
+    };
 }

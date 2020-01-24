@@ -5,6 +5,8 @@ describe('Store', () => {
         describe('.createStore()', () => {
             let store;
 
+
+
             beforeEach(() => {
                 store = createStore(null);
             });
